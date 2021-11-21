@@ -9,6 +9,7 @@ var db;
 MongoClient.connect(process.env.DB_URL, { useUnifiedTopology: true },  (error, client)=>{
     if(error) return console.log(error)
     db = client.db('beta_db');
+    app.db = db;
 
     app.listen(process.env.PORT, ()=>{
         console.log('listening on 8080')
@@ -21,21 +22,6 @@ app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 app.set('view engine', 'ejs');
 app.use('/',require('./routes/route.js'));
 
-
-// app.get('/',(request, response)=>{
-//    response.render('index.ejs')
-// });
-
-// app.get('/write',(request, response)=>{
-//     response.render('write.ejs');
-//  });
-
-app.get('/list', (request, response)=>{
-    db.collection('posts').find().toArray((error,result)=>{
-        console.log(result);
-        response.render('list.ejs', {posts: result});
-    });
-});
 
 
  app.post('/add',(request, response)=>{
