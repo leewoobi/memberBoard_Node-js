@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"> 
+   
+</head>
+<body>
+  <%- include('nav.html') %>
+
+      <h4 class="container mt-4"><strong>글 작성페이지</strong></h4>
+
+      <div class= "container mt-3">
+        <form action="/add" method="POST">
+            <div class="mb-3">
+              <label> To do</label>
+              <input type="text" class="form-control" name="title">
+            </div>
+            <div class="mb-3">
+              <label>Due date</label>
+              <input type="text" class="form-control" name="date">
+            </div>
+            
+            <button type="submit" class="btn btn-danger">Due date</button>
+          </form>
+      </div>
+      
+    
+
+    <script src="/js/jquery.min.js"></script>
+     <script src="/js/bootstrap.min.js"></script>
+</body>
+</html>

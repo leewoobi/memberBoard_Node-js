@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"> 
+   
+</head>
+<body>
+  <%- include('nav.html') %>
+
+      <h4 class="container mt-4"><strong>do List Page</strong></h4>
+
+      <div class= "container mt-3">
+        <% for ( var i = 0; i < posts.length ; i++){ %>
+          <li class="list-group-item">
+            <p> postNumber : <%= posts[i]._id %> </p>
+            <h4 class="m1-2 my-3">do list : <%= posts[i].title %></h4>
+            <p> do date : <%= posts[i].date %> </p>
+            <button class="btn btn-danger delete" data-id=" <%= posts[i]._id %> ">delete</button>
+          </li>
+       <%  }  %>
+
+       
+       
+      </div>
+      
+    
+
+    <script src="/js/jquery.min.js"></script>
+     <script src="/js/bootstrap.min.js"></script>
+</body>
+</html>
