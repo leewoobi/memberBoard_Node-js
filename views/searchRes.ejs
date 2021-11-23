@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <link rel="stylesheet" href="/public/main.css">
+
+
+</head>
+<body>
+  <%- include('particle/nav.ejs') %>
+
+      <h4 class="container mt-4 text-center"><strong>do List Page</strong></h4>
+
+      <div class="container input-group mb-2">
+         <input class="form-control" id="search-input">
+         <button class="input-group-append btn btn-danger" id="searchBtn">search</button>
+      </div>
+
+      <div class= "container mt-3">
+        <ul class="list-group"> 
+        <% for ( var i = 0; i < posts.length ; i++){ %>
+        
+            <li class="list-group-item"  >
+              <a  href="/edit/<%= posts[i]._id %>" >
+                <p> postNumber : <%= posts[i]._id %> </p>
+                <h4 class="m1-2 my-3">do list : <%= posts[i].title %></h4>
+                <p> do date : <%= posts[i].date %> </p>
+              </a> 
+              <button class="btn btn-danger delete" data-id=" <%= posts[i]._id %> " >delete</button>
+            </li>
+         
+          
+       <%  }  %>
+        </ul>
+      </div>
+      
+      <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+
+</body>
+</html>
