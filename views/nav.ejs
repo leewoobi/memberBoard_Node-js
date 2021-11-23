@@ -12,15 +12,21 @@
             <li class="nav-item">
               <a class="nav-link" href="/write">Write</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/login">login</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/signup">signup</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/mypage">mypage</a>
-            </li>
+
+            <% if(!user){ %> <!-- 1 -->
+              <li class="nav-item"><a href="/signup" class="nav-link">Sign Up</a></li>
+              <li class="nav-item"><a href="/login" class="nav-link">Login</a></li>
+            <% } else { %>
+             
+              <li class="nav-item"><a href="/logout" class="nav-link">Logout</a></li>
+              <li class="nav-item"><a href="" class="nav-link"> <h5>Hellow <%= user.id %></h5></a></li>
+              <li class="nav-item">
+                <a class="nav-link" href="/mypage">mypage</a>
+              </li>
+            <% } %>
+
+           
+        
         </ul>
     </div>
  </nav>

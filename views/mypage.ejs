@@ -5,33 +5,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-     <!-- Bootstrap CSS -->
+  
+    <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
    
 </head>
 <body>
   <%- include('nav.ejs') %>
+    <h4>  <%= user.id %> mypage</h4>
 
-      <h4 class="container mt-4"><strong> write page</strong></h4>
-
-      <div class= "container mt-3">
-        <form action="/add" method="POST">
-            <div class="mb-3">
-              <label> To do</label>
-              <input type="text" class="form-control" name="title">
-            </div>
-            <div class="mb-3">
-              <label>Due date</label>
-              <input type="text" class="form-control" name="date">
-            </div>
-            
-            <button type="submit" class="btn btn-danger">submit</button>
-          </form>
-      </div>
-      
+          
     
-
       <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+
+     
 </body>
 </html>
