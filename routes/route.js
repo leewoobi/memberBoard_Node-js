@@ -25,6 +25,7 @@ router.get('/signup',(req,res)=>{
 
 router.get('/list',(req,res)=>{
   req.app.db.collection('posts').find().toArray((error,result)=>{
+    // console.log(result, req.user)
     res.render('list.ejs', {posts: result, user: req.user});
  });
 })
@@ -44,7 +45,7 @@ router.get('/search',(req,res)=>{
     // {$limit : 10} 갯수 제한
   ] 
   req.app.db.collection('posts').aggregate(seachCon).toArray((error,result)=>{
-    console.log(result);
+    // console.log(result);
     res.render('searchRes.ejs', {posts: result , user: req.user});
   })
 })

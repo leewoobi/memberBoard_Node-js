@@ -15,32 +15,119 @@
 
     <div class="container mt-4">
       <h3>sign up page</h3>
-        <form action="/signup" method="POST">
+        <form action="/signup" method="POST" onsubmit="return signUpCheck()">
             <div class="form-group">
                 <label>name</label>
-                <input type="text" class="form-control" name="name">
+                <input id="name" type="text" placeholder="이름" class="form-control" name="name">
             </div>
-            <div class="form-group">
+            <div class="form-group" style="display: flex; flex-direction: column;">
                 <label>id</label>
-                <input type="text" class="form-control" name="id">
+                <input  id="id" type="text" placeholder="4~12자의 영문대소문자와 숫자로만 입력" class="form-control mb-2" name="id">
+                <span id ="overlapCheck" ></span>
+               
             </div>
+            
             <div class="form-group">
                 <label>password</label>
-                <input type="password" class="form-control" name="pw">
+                <input id="pw" type="password" placeholder="4~12자의 영문대소문자와 숫자로만 입력" class="form-control" name="pw">
+            </div>
+            <div class="form-group">
+                <label>password check</label>
+                <input id="pwCheck" type="password" placeholder="4~12자의 영문대소문자와 숫자로만 입력" class="form-control" >
             </div>
             <div class="form-group">
                 <label>e-mail</label>
-                <input type="email" class="form-control" name="email">
+                <input id="email" type="email" placeholder="예: id@domain.com" class="form-control" name="email">
             </div>
             <button type="submit" class="btn btn-danger">Submit</button>
         </form>
     </div>
 
-<!-- Optional JavaScript; choose one of the two! -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+  <script>
 
-<!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+ $(function(){
+     $('#id').on('keyup',overlapIdCheck);
+ })       
 
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+ function overlapIdCheck(){
+    var inputId = $("#id").val();  
+    var sendData = { id : inputId };
+    $.ajax({
+        method : 'POST',
+        url : '/overlap',
+        data : sendData,
+        success : function(res){
+            if(res=='fail'){
+                $('#overlapCheck').css('color','red')
+                $('#overlapCheck').html("사용할 수 없는 아이디입니다.")
+                flag=false;
+  
+            }else{
+                $('#overlapCheck').css('color','blue')
+                $('#overlapCheck').html("사용할 수 있는 아이디입니다.")
+                flag=true;
+            }}
+    })	
+}
+
+
+
+      function signUpCheck(){
+        var getMail = RegExp(/^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/); 
+        var getCheck= RegExp(/^[a-zA-Z0-9]{4,12}$/); 
+
+        if($("#id").val() == ""){
+            alert("아이디를 입력하세요");
+            $("#id").focus();
+            return false;
+        }
+
+        if($("#pw").val() == ""){
+            alert("비밀번호를 입력하세요");
+            $("#pw").focus();
+            return false;
+        }
+
+        if(!getCheck.test($('#id').val())){
+            alert('아이디가 형식에 맞지 않습니다.');
+            $('#id').val("");
+            $('#id').focus();
+            return false;
+        }
+
+        if(!getCheck.test($('#pw').val())){
+            alert('비밀번호가 형식에 맞지 않습니다.');
+            $('#pw').val("");
+            $('#pw').focus();
+            return false;
+        }
+
+        if($("#pw").val() != $("#pwCheck").val()){
+            alert('두 비밀번호가 일치하지 않습니다.');
+            $('#pw').val("");
+            $('#pwCheck').val("");
+            $('#pw').focus();
+            return false;
+        }
+        if($("#name").val() == ""){ 
+            alert("이름을 입력해주세요"); 
+            $("#name").focus(); 
+            return false; 
+        }
+
+        if(!getMail.test($("#email").val())){
+             alert("이메일형식에 맞게 입력해주세요") 
+             $("#email").val("");
+             $("#email").focus();
+             return false;
+        }
+
+
+      }
+  </script>
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
 <!-- Option 2: Separate Popper and Bootstrap JS -->
 <!--

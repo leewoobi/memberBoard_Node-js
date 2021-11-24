@@ -51,7 +51,7 @@ passport.use(new LocalStrategy({
       const hashPassword = crypto.createHash('sha512').update(inputPassword + salt).digest('hex');
       if (error) return done(error)
   
-      if (!result) return done(null, false, { message: '존재하지않는 아이디요' })
+      if (!result) return done(null, false, { message: '존재하지않는 아이디입니다' })
       if (hashPassword == result.pw ) { 
         return done(null, result)
       } else {
@@ -112,7 +112,7 @@ app.post('/add',(req, res)=>{
   //  response.send('전송완료');
   res.redirect('/list');
    db.collection('counter').findOne({name: 'postNum' }, (error, result)=>{
-       console.log(result.totalPost)
+      //  console.log(result.totalPost)
        var totalPostNum = result.totalPost;
 
        var saveInfo = {_id:totalPostNum + 1, title: req.body.title , date: req.body.date, writer: req.user._id }
@@ -126,7 +126,7 @@ app.post('/add',(req, res)=>{
 });
 
 app.delete('/delete',(req,res)=>{
-  console.log(req.body);
+  // console.log(req.body);
   req.body._id  = parseInt(req.body._id);  
 
   var deleteData = {_id : req.body._id , writer : req.user._id }
@@ -136,4 +136,16 @@ app.delete('/delete',(req,res)=>{
       if(error) {console.log(error)}
       res.status(200).send({message:'성공했습니다'});
   }  )
+})
+
+app.post('/overlap',(req,res)=>{
+  db.collection('member').findOne(req.body,(error,result)=>{
+    if(result){
+      res.status(200).send('fail')
+  
+    }
+    else {
+      res.status(200).send('true')
+    }
+  })
 })

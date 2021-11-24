@@ -14,6 +14,7 @@
   <%- include('particle/nav.ejs') %>
 
       <h4 class="container mt-4 text-center"><strong>do List Page</strong></h4>
+      <p class="container mt-4 text-center">수정은 리스트를 클릭하면 가능합니다.</p>
 
       <div class="container input-group mb-2">
          <input class="form-control" id="search-input">
@@ -22,7 +23,8 @@
 
       <div class= "container mt-3">
         <ul class="list-group"> 
-        <% for ( var i = 0; i < posts.length ; i++){ %>
+          <!-- 역순으로 조회 -->
+        <% for ( let i = posts.length -1; i >= 0 ; i--){ %>
         
             <li class="list-group-item"  >
               <a  href="/edit/<%= posts[i]._id %>" >
@@ -30,7 +32,16 @@
                 <h4 class="m1-2 my-3">do list : <%= posts[i].title %></h4>
                 <p> do date : <%= posts[i].date %> </p>
               </a> 
-              <button class="btn btn-danger delete" data-id=" <%= posts[i]._id %> " >delete</button>
+           <% if(!user){  %>
+                  <p>작성자만 수정 및 삭제가 가능합니다.</p>
+            <% }else{ %>
+               <%  if(JSON.stringify(user._id) == JSON.stringify(posts[i].writer) ){ %>
+                   <button class="btn btn-danger delete" data-id=" <%= posts[i]._id %> " >delete</button>
+               <%  }else{ %>
+                     <p>작성자만 수정 및 삭제가 가능합니다.  </p>
+                <% } %>
+           <% } %>
+                   
             </li>
          
           
