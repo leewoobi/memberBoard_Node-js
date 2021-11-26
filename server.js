@@ -9,6 +9,7 @@ const LocalStrategy = require('passport-local').Strategy; //세션
 const session = require('express-session'); //세션 
 const crypto = require('crypto'); // 암호화 
 require('dotenv').config(); // 환경변수
+const {ObjectId} = require('mongodb');
 var db;
 
 
@@ -35,8 +36,6 @@ app.use(bodyParser.urlencoded({extended : true })); //bodyParser
 app.set('view engine', 'ejs'); //ejs 
 
 
-app.use('/',require('./routes/route.js')); // routes 
-
 
 
 passport.use(new LocalStrategy({
@@ -61,8 +60,6 @@ passport.use(new LocalStrategy({
   }));
   
 
-
-
 passport.serializeUser((user,done)=>{
     done(null, user.id)
 });
@@ -85,7 +82,7 @@ app.post('/login', passport.authenticate('local', {
    }
  );
 
-
+ app.use('/',require('./routes/route.js')); // routes 
 
 app.put('/edit', (req,res)=>{
     db.collection('posts').updateOne({_id : parseInt(req.body.id) },{ $set : { title:req.body.title, date: req.body.date }},(error, result)=>{
@@ -149,3 +146,65 @@ app.post('/overlap',(req,res)=>{
     }
   })
 })
+
+app.post('/chatroom', (req,res)=>{
+ var saveChatInfo = {
+   title: '어떤채팅방',
+   member: [ req.body.boardUser, req.user._id.toString() ],
+   data: new Date()
+ }
+
+db.collection('chatroom').insertOne(saveChatInfo).then((result)=>{
+  res.send('저장완료')
+})
+
+})
+
+app.post('/message',(req,res)=>{
+
+  var saveMessage = {
+    parent: req.body.parent ,
+    content : req.body.content ,
+    userid : req.user._id,
+    date : new Date(),
+  }
+
+  db.collection('message').insertOne(saveMessage).then(()=>{
+    console.log('db저장 ')
+    res.send('db 저장 ')
+  })
+
+})
+
+
+app.get('/messages/:id', function(req, res){
+
+  res.writeHead(200, {
+    "Connection": "keep-alive",
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+  });
+  db.collection('message').find({parent : req.params.id}).toArray()
+  .then((result)=>{
+    // console.log(result);
+    res.write('event: test\n');
+    res.write('data:' + JSON.stringify(result)+ '\n\n');
+    });
+
+    const pipeline = [
+      { $match : { 'fullDocument.parent' : req.params.id} }
+    ];
+    
+    const collection = db.collection('message');
+    const changeStream = collection.watch(pipeline);
+    changeStream.on('change', (result)=>{
+      res.write('event: test\n');
+      res.write('data:' + JSON.stringify([result.fullDocument])+ '\n\n');
+      // console.log(JSON.stringify([result.fullDocument]))
+    });
+
+  
+ 
+
+});
+

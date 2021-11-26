@@ -14,7 +14,11 @@
   <%- include('particle/nav.ejs') %>
 
       <h4 class="container mt-4 text-center"><strong>do List Page</strong></h4>
-      <p class="container mt-4 text-center">수정은 리스트를 클릭하면 가능합니다.</p>
+      <ul class="container mt-4 text-center">
+       <li> 수정 및 삭제는 해당 글의 작성자만 가능합니다. </li>
+       <li>수정은 리스트를 클릭하여 이용합니다.</li>
+       <li>채팅 기능은 로그인 후에 이용 가능합니다.</li>
+      </ul>
 
       <div class="container input-group mb-2">
          <input class="form-control" id="search-input">
@@ -33,12 +37,13 @@
                 <p> do date : <%= posts[i].date %> </p>
               </a> 
            <% if(!user){  %>
-                  <p>작성자만 수정 및 삭제가 가능합니다.</p>
+                 <p></p>
             <% }else{ %>
                <%  if(JSON.stringify(user._id) == JSON.stringify(posts[i].writer) ){ %>
                    <button class="btn btn-danger delete" data-id=" <%= posts[i]._id %> " >delete</button>
                <%  }else{ %>
                      <p>작성자만 수정 및 삭제가 가능합니다.  </p>
+                     <button class="btn btn-secondary chat" data-id="<%= posts[i].writer %>">채팅하기</button>
                 <% } %>
            <% } %>
                    
@@ -52,6 +57,13 @@
       <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
 
        <script>
+
+         $('.chat').click((e)=>{
+           var _id = e.target.dataset.id;
+           $.post('/chatroom', {boardUser : _id}).then(()=>{
+             console.log('채팅방 게시물 생성완료')
+           })
+         })
 
          $('#searchBtn').click(function(){
           var inputValue =  $('#search-input').val()

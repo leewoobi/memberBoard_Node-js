@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  
+    <!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+<link rel="stylesheet" href="/public/main.css">
+</head>
+<body>
+  <%- include('particle/nav.ejs') %>
+
+
+  <div class="container p-4 detail">
+
+    <div class="row">
+      <div class="col-3">
+        <ul class="list-group chat-list">
+
+          <% for (var i=0; i < data.length ; i++){ %>
+            <li class="list-group-item" data-id="<%= data[i]._id %>"> 
+        
+            
+              <% console.log(data2,'뭐야')%>
+              <h6 id= "title "> <%= data2.id %> </h6>     
+              <h6 class="text-small"> <%= data[i].member[0] %> </h6>
+            </li>
+          <% } %>
+          
+          </ul> 
+       </div>
+  
+       <div class="col-9 p-0">
+         <div class="chat-room">
+            <ul class="list-group chat-content">
+              <li><span class="chat-box">채팅방1  </span></li>
+              <li><span class="chat-box">채팅방1 내용</span></li>
+              <li><span class="chat-box mine">채팅방1 내용</span></li>
+            </ul>
+          <div class="input-group">
+            <input class="form-control" id="chat-input">
+            <button class="btn btn-secondary" id="send">전송</button>
+          </div>
+        </div>
+      </div>
+
+          
+    
+      <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+
+      <script>
+        // 이우비 cb89
+        // 이정환 92a3
+        // himin b901
+        
+         var pushChatroomId;
+         var eventSource
+         var user = '<%= user._id %>'.toString();
+        $('.list-group-item').click(function(){
+           pushChatroomId = this.dataset.id;
+           $('.chat-content').html('');
+
+           if(eventSource != undefined ){
+             eventSource.close()
+           }
+          
+           eventSource = new EventSource('/messages/' + pushChatroomId);
+           eventSource.addEventListener('test',function(e){
+             console.log(JSON.parse(e.data));
+            
+             var messageData = JSON.parse(e.data);
+              
+           
+              messageData.forEach(i => {
+                
+               
+                if(user == i.userid){
+                  $('.chat-content').append('<li><span class="chat-box mine">' + i.content +'</span></li>') 
+                }else{
+                  
+                  $('.chat-content').append('<li><span class="chat-box ">' + i.content +'</span></li>') 
+                }
+              });
+
+            
+             
+           })
+        })
+
+
+        $('#send').click(function(){
+          var chatCon = $('#chat-input').val();
+          var sendInfo = {
+            parent : pushChatroomId,
+            content : chatCon,
+          }
+          $.post('/message', sendInfo).then(()=>{
+              console.log('전송성공')
+          })
+          $('#chat-input').val('');
+        })
+
+      </script>
+
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+
+     
+</body>
+</html>
