@@ -153,10 +153,18 @@ app.post('/chatroom', (req,res)=>{
    member: [ req.body.boardUser, req.user._id.toString() ],
    data: new Date()
  }
+ 
+ db.collection('chatroom').find( {member : {$in : saveChatInfo.member}}).toArray((error,result)=>{
+   console.log(result);
+  if(result == null){
+    db.collection('chatroom').insertOne(saveChatInfo).then((result2)=>{
+      res.send('저장완료')
+    })
+  }else{
+     console.log('이미 채팅방이 있넹')
+  }
+ })
 
-db.collection('chatroom').insertOne(saveChatInfo).then((result)=>{
-  res.send('저장완료')
-})
 
 })
 

@@ -1,4 +1,6 @@
 var router = require('express').Router();
+const { ObjectID } = require('bson');
+const e = require('connect-flash');
 const {ObjectId} = require('mongodb');
 function loginCheck(req,res,next){
   if(req.user){
@@ -59,34 +61,46 @@ router.get('/search',(req,res)=>{
 })
 router.get('/chat', (req,res)=>{
   req.app.db.collection('chatroom').find({member : req.user._id.toString() }).toArray().then((result1)=>{
+    console.log(result1);
     var users =  req.user._id.toString(); 
-   
+    var chatTitle = [];
     for ( var i = 0;  i < result1.length; i++){
+    var chatList = result1[i].member  ;
     
-    var chatList = result1[i].member  ; 
+    chatTitle.push(chatList.find((e,index,a)=> chatList[index] !== users ))
     
-    var chatTitle =  chatList.find((e,i,a)=>{ 
-                  
-                 
-                  console.log( chatList[0])
-                  console.log( users,'das')
-                 return chatList[i] !== users  
-        
-             });
-           
-         break;  
     }
-    console.log(chatTitle, '뭐가나왔니')
-    req.app.db.collection('member').findOne({_id:ObjectId(chatTitle)},(error,result2)=>{
+    chatTitle = chatTitle.map(i=> ObjectID(i));
+    
+    
+    req.app.db.collection('member').find({_id : {$in : chatTitle}}).toArray((error,result2)=>{
       if(error) {console.log(error)}
-      console.log(result1,'채팅방 목록')
-      console.log(result2, '상대유저정보')
-      res.render('chat.ejs', {data: result1, data2: result2, user: req.user});
-
-     })
-    //  res.render('chat.ejs', {data: result1, user: req.user});
+      var titleList = [];
+      for ( var a = 0;  a < result1.length; a++ ){
+        for ( var b = 0;  b < result1.length; b++  ){
+         console.log(result2,'이거 결과2')
+          var  boardInfo = result1[a].member;
+          var  userInfo = result2[b]._id.toString(); 
+          var  rs = boardInfo.find((e,i)=> boardInfo[i] == userInfo )
+     
+        
+          if(rs !== undefined){
+            titleList.push(rs);
+            if (titleList.length !== 0){
+  
+              result1[a].name = result2[b].name 
+            
+            }
+          }             
+        }      
+      }
+      res.render('chat.ejs', {data: result1, user: req.user});
+    })
   })
 })
+
+
+
 
 
  
